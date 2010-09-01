@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F2D977B1-1AFE-4827-83F0-946563DC756C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Integrator</RootNamespace>
+    <AssemblyName>Integrator</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Commander">
+      <HintPath>..\..\Lib\Commander\Commander.dll</HintPath>
+    </Reference>
+    <Reference Include="FubuCore">
+      <HintPath>..\..\Lib\FubuMVC\FubuCore.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\CommonAssemblyInfo.cs">
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="CoreExtensions.cs" />
+    <Compile Include="Registration\Conventions\RegisterDefaultGenerators.cs" />
+    <Compile Include="Registration\Dsl\GeneratorRegistryExpression.cs" />
+    <Compile Include="Generators\StringGenerator.cs" />
+    <Compile Include="Generators\DefaultEntityGenerator.cs" />
+    <Compile Include="Generators\IEntityGenerator.cs" />
+    <Compile Include="GeneratorForAttribute.cs" />
+    <Compile Include="Registration\Conventions\RegisterDefaultEntityGeneratorConvention.cs" />
+    <Compile Include="Registration\DefaultGeneratorRegistry.cs" />
+    <Compile Include="Registration\Dsl\EntityMapAlterationExpression.cs" />
+    <Compile Include="Registration\Dsl\GeneratorExpression.cs" />
+    <Compile Include="Generators\IntGenerator.cs" />
+    <Compile Include="Integrator.cs" />
+    <Compile Include="Registration\Conventions\IgnoreCollectionsConvention.cs" />
+    <Compile Include="Registration\IGeneratorRegistry.cs" />
+    <Compile Include="Registration\IGeneratorRegistryModification.cs" />
+    <Compile Include="Registration\LambdaGeneratorPolicy.cs" />
+    <Compile Include="Registration\Dsl\MapAlterationExpression.cs" />
+    <Compile Include="Registration\Conventions\GeneratorResolver.cs" />
+    <Compile Include="Generators\IGenerator.cs" />
+    <Compile Include="Registration\IGeneratorPolicy.cs" />
+    <Compile Include="IntegratorException.cs" />
+    <Compile Include="Registration\Dsl\AppliesToExpression.cs" />
+    <Compile Include="Registration\Dsl\EntityMatcher.cs" />
+    <Compile Include="IntegratorRegistry.cs" />
+    <Compile Include="Registration\DomainGraph.cs" />
+    <Compile Include="Registration\Dsl\ITypeMatcher.cs" />
+    <Compile Include="Registration\Dsl\PoliciesExpression.cs" />
+    <Compile Include="Registration\Dsl\TypeCandidateExpression.cs" />
+    <Compile Include="Registration\EntityMap.cs" />
+    <Compile Include="Registration\Graph\ConfiguredDependency.cs" />
+    <Compile Include="Registration\Graph\IDependency.cs" />
+    <Compile Include="Registration\Graph\IDependencyVisitor.cs" />
+    <Compile Include="Registration\Graph\ObjectDef.cs" />
+    <Compile Include="Registration\Graph\ValueDependency.cs" />
+    <Compile Include="Registration\IConfigurationAction.cs" />
+    <Compile Include="Registration\LambdaConfigurationAction.cs" />
+    <Compile Include="Registration\PropertyMap.cs" />
+    <Compile Include="Registration\RegistrationExtensions.cs" />
+    <Compile Include="Registration\TypePool.cs" />
+    <Compile Include="Registration\ValueRequest.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
