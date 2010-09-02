@@ -30,5 +30,12 @@ namespace Integrator.Registration
         {
             _entityMaps.Fill(map);
         }
+
+        public void Import(DomainGraph graph)
+        {
+            graph
+                .EntityMaps
+                .Each(AddEntityMap);
+        }
     }
 }

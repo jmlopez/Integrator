@@ -1,4 +1,5 @@
 using Commander;
+using Integrator.HelloWorld.Configuration;
 using Integrator.HelloWorld.Domain;
 using NUnit.Framework;
 

@@ -19,5 +19,11 @@ namespace Integrator
 
             return type.GetAttribute<GeneratorForAttribute>().Type;
         }
+
+        public static bool IsCustomRegistryExtension(this Type type)
+        {
+            return typeof (IIntegratorRegistryExtension).IsAssignableFrom(type)
+                   && type.IsClass && !type.IsAbstract;
+        }
     }
 }

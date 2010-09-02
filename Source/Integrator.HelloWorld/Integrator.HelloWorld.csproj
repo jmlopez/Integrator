@@ -97,14 +97,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\BlogPostIntegratorExtension.cs" />
+    <Compile Include="Configuration\UserIntegratorExtension.cs" />
     <Compile Include="Domain\BlogPost.cs" />
     <Compile Include="Domain\EntityMarker.cs" />
     <Compile Include="Domain\Persistence\CollectionAccessConvention.cs" />
     <Compile Include="Domain\Persistence\MapMarker.cs" />
     <Compile Include="Domain\Persistence\UserMap.cs" />
     <Compile Include="Domain\User.cs" />
-    <Compile Include="HelloWorldIntegratorRegistry.cs" />
-    <Compile Include="HelloWorldStructureMapRegistry.cs" />
+    <Compile Include="Configuration\HelloWorldIntegratorRegistry.cs" />
+    <Compile Include="Configuration\HelloWorldStructureMapRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpecificationExtensions.cs" />
     <Compile Include="UserTester.cs" />

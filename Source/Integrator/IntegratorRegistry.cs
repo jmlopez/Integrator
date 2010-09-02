@@ -19,7 +19,7 @@ namespace Integrator
         private readonly CommandRegistry _commandRegistry = new CommandRegistry();
         private readonly TypePool _types = new TypePool();
         private readonly TypePool _generatorTypes = new TypePool();
-        private readonly EntityMatcher _entityMatcher = new EntityMatcher();
+        private readonly EntityMatcher _entityMatcher;
         private readonly DefaultGeneratorRegistry _defaultGeneratorRegistry = new DefaultGeneratorRegistry();
         private readonly GeneratorResolver _generatorResolver = new GeneratorResolver();
         private readonly List<IConfigurationAction> _conventions = new List<IConfigurationAction>();
@@ -29,12 +29,14 @@ namespace Integrator
         
         public IntegratorRegistry()
         {
+            _entityMatcher = new EntityMatcher(_types);
+
             _generatorTypes.AddAssembly(typeof(IntegratorRegistry).Assembly);
             _generatorModifications.Add(new RegisterDefaultEntityGeneratorConvention());
             _generatorModifications.Add(new RegisterDefaultGenerators(_generatorTypes));
 
 
-            addConvention(graph => _entityMatcher.BuildMaps(_types, graph));
+            addConvention(graph => _entityMatcher.BuildMaps(graph));
             addConvention(graph => _generatorResolver.RegisterGeneratorPolicy(_defaultGeneratorRegistry));
             _explicits.Add(graph => _generatorTypes.ImportAssemblies(_types));
             addConvention(graph => _generatorResolver.ApplyToAll(graph));

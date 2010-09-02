@@ -97,9 +97,11 @@
     <Compile Include="Bootstrapping\TypeCandidateExpressionAdapter.cs" />
     <Compile Include="Commands\Conventions\FindEntitiesFromRepositoryConvention.cs" />
     <Compile Include="Commands\FindEntityCommand.cs" />
+    <Compile Include="IIntegratorRegistryExtension.cs" />
     <Compile Include="Infrastructure\EntityRequest.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
+    <Compile Include="IntegratorStructureMapRegistry.cs" />
     <Compile Include="PersistEntityCommand.cs" />
     <Compile Include="Registration\Dsl\CommandsExpression.cs" />
     <Compile Include="CoreExtensions.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Registration\Conventions\IgnoreCollectionsConvention.cs" />
     <Compile Include="Registration\Dsl\ITypeCandidateExpression.cs" />
     <Compile Include="Registration\Dsl\NulloTypeCandidateExpression.cs" />
+    <Compile Include="Registration\Dsl\TypeMatcher.cs" />
     <Compile Include="Registration\IGeneratorRegistry.cs" />
     <Compile Include="Registration\IGeneratorRegistryModification.cs" />
     <Compile Include="Registration\LambdaGeneratorPolicy.cs" />
@@ -145,6 +148,8 @@
     <Compile Include="Registration\RegistrationExtensions.cs" />
     <Compile Include="Registration\TypePool.cs" />
     <Compile Include="Registration\ValueRequest.cs" />
+    <Compile Include="RegistryImportExpression.cs" />
+    <Compile Include="RegistryMatcher.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

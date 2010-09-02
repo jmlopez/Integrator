@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Commander;
 using Commander.StructureMap;
 using FubuCore;
@@ -27,7 +28,12 @@ namespace Integrator
             lock (typeof(Integrator))
             {
                 ObjectFactory.Initialize(configure);
-                ObjectFactory.Configure(x => x.For<IRepository>().Use<Repository>());
+                ObjectFactory.Configure(x => x.IncludeRegistry<IntegratorStructureMapRegistry>());
+
+                ObjectFactory
+                    .GetAllInstances<IIntegratorRegistryExtension>()
+                    .Each(ext => ext.Configure(registry));
+
                 _graph = registry.BuildGraph();
 
                 var facility = new StructureMapContainerFacility(ObjectFactory.Container);

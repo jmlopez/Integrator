@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using FubuCore.Util;
+﻿using System.Collections.Generic;
 
 namespace Integrator.Registration.Dsl
 {
-    public class EntityMatcher : ITypeMatcher
+    public class EntityMatcher : TypeMatcher
     {
-        private readonly CompositeFilter<Type> _typeFilters = new CompositeFilter<Type>();
-        public CompositeFilter<Type> TypeFilters { get { return _typeFilters; } }
-
-        public void BuildMaps(TypePool pool, DomainGraph graph)
+        public EntityMatcher(TypePool types) 
+            : base(types)
         {
-            pool
-                .TypesMatching(TypeFilters.Matches)
+        }
+
+        public void BuildMaps(DomainGraph graph)
+        {
+            Matches()
                 .Each(t => graph.AddEntityMap(EntityMap.For(t)));
         }
     }

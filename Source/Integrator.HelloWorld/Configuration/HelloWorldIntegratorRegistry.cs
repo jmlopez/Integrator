@@ -1,6 +1,6 @@
 using Integrator.HelloWorld.Domain;
 
-namespace Integrator.HelloWorld
+namespace Integrator.HelloWorld.Configuration
 {
     public class HelloWorldIntegratorRegistry : IntegratorRegistry
     {
@@ -15,15 +15,6 @@ namespace Integrator.HelloWorld
 
             Maps
                 .IgnoreCollections();
-
-            Maps
-                .Alter<BlogPost>()
-                .Ignore(p => p.PostId)
-                .Ignore(p => p.Author);
-
-            Maps
-                .Alter<User>()
-                .Ignore(u => u.UserId);
         }
     }
 }

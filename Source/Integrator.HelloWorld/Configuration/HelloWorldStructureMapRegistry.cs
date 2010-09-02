@@ -6,7 +6,7 @@ using NHibernate.Tool.hbm2ddl;
 using ProAceFx.Core.Configuration;
 using StructureMap.Configuration.DSL;
 
-namespace Integrator.HelloWorld
+namespace Integrator.HelloWorld.Configuration
 {
     public class HelloWorldStructureMapRegistry : Registry
     {
