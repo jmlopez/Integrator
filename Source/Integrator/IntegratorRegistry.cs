@@ -1,13 +1,22 @@
 using System;
 using System.Collections.Generic;
+using Commander.Registration.Dsl;
+using Integrator.Bootstrapping;
+using Integrator.Commands.Conventions;
 using Integrator.Registration;
 using Integrator.Registration.Conventions;
 using Integrator.Registration.Dsl;
+using ProAceFx.Commander.Conventions;
+using AppliesToExpression = Integrator.Registration.Dsl.AppliesToExpression;
+using EntityMatcher = Integrator.Registration.Dsl.EntityMatcher;
+using PoliciesExpression = Integrator.Registration.Dsl.PoliciesExpression;
+using TypeCandidateExpression = Integrator.Registration.Dsl.TypeCandidateExpression;
 
 namespace Integrator
 {
     public class IntegratorRegistry
     {
+        private readonly CommandRegistry _commandRegistry = new CommandRegistry();
         private readonly TypePool _types = new TypePool();
         private readonly TypePool _generatorTypes = new TypePool();
         private readonly EntityMatcher _entityMatcher = new EntityMatcher();
@@ -17,7 +26,7 @@ namespace Integrator
         private readonly IList<IConfigurationAction> _policies = new List<IConfigurationAction>();
         private readonly List<Action<DomainGraph>> _explicits = new List<Action<DomainGraph>>();
         private readonly IList<IGeneratorRegistryModification> _generatorModifications = new List<IGeneratorRegistryModification>();
-
+        
         public IntegratorRegistry()
         {
             _generatorTypes.AddAssembly(typeof(IntegratorRegistry).Assembly);
@@ -29,6 +38,13 @@ namespace Integrator
             addConvention(graph => _generatorResolver.RegisterGeneratorPolicy(_defaultGeneratorRegistry));
             _explicits.Add(graph => _generatorTypes.ImportAssemblies(_types));
             addConvention(graph => _generatorResolver.ApplyToAll(graph));
+
+            Commands
+                .ApplyConvention<InitializeUnitOfWorkConvention>()
+                .ApplyConvention<CommitUnitOfWorkConvention>()
+                .ApplyConvention<InsertNewEntitiesConvention>()
+                .ApplyConvention<UpdateExistingEntitiesConvention>()
+                .ApplyConvention<FindEntitiesFromRepositoryConvention>();
         }
 
         public IntegratorRegistry(Action<IntegratorRegistry> configure)
@@ -38,11 +54,13 @@ namespace Integrator
         }
 
         public AppliesToExpression Applies { get { return new AppliesToExpression(_types); } }
-        public TypeCandidateExpression Entities { get { return new TypeCandidateExpression(_entityMatcher, _types); } }
+        public TypeCandidateExpression Entities { get { return new TypeCandidateExpression(_entityMatcher, _types, new TypeCandidateExpressionAdapter(_commandRegistry.Entities)); } }
         public PoliciesExpression Policies { get { return new PoliciesExpression(_policies); } }
         public GeneratorExpression Generators { get { return new GeneratorExpression(_generatorResolver); } }
         public MapAlterationExpression Maps { get { return new MapAlterationExpression(_policies); } }
         public GeneratorRegistryExpression GeneratorRegistry { get { return new GeneratorRegistryExpression(_generatorModifications);}}
+        public CommandRegistry CommandRegistry { get { return _commandRegistry; } }
+        public CommandsExpression Commands { get { return new CommandsExpression(_commandRegistry); } }
 
 
         private void addConvention(Action<DomainGraph> convention)
@@ -72,6 +90,8 @@ namespace Integrator
             _explicits.Each(action => action(graph));
 
             _generatorModifications.Each(modification => modification.Modify(graph, _defaultGeneratorRegistry));
+
+            _types.EachAssembly(assembly => _commandRegistry.Applies.ToAssembly(assembly));
 
             return graph;
         }

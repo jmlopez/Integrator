@@ -31,9 +31,63 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\Lib\FluentNHibernate\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\Lib\FluentNHibernate\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2">
+      <HintPath>..\..\Lib\FluentNHibernate\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
+    <Reference Include="Commander, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Commander\Source\Commander.StructureMap\bin\Debug\Commander.dll</HintPath>
+    </Reference>
+    <Reference Include="Commander.StructureMap, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Commander\Source\Commander.StructureMap\bin\Debug\Commander.StructureMap.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentNHibernate">
+      <HintPath>..\..\Lib\FluentNHibernate\FluentNHibernate.dll</HintPath>
+    </Reference>
     <Reference Include="FubuCore, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Lib\FubuMVC\FubuCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\..\Lib\FluentNHibernate\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\Lib\FluentNHibernate\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Commander\Source\Commander.StructureMap\bin\Debug\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\..\Lib\FluentNHibernate\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\..\Lib\FluentNHibernate\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\Lib\NUnit\framework\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ProAceFx, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ProAceFx\Build\ProAceFx.dll</HintPath>
+    </Reference>
+    <Reference Include="ProAceFx.Commander, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ProAceFx\Build\ProAceFx.Commander.dll</HintPath>
+    </Reference>
+    <Reference Include="ProAceFx.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\ProAceFx\Build\ProAceFx.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="StructureMap">
+      <HintPath>..\..\Lib\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -45,15 +99,24 @@
   <ItemGroup>
     <Compile Include="Domain\BlogPost.cs" />
     <Compile Include="Domain\EntityMarker.cs" />
+    <Compile Include="Domain\Persistence\CollectionAccessConvention.cs" />
+    <Compile Include="Domain\Persistence\MapMarker.cs" />
+    <Compile Include="Domain\Persistence\UserMap.cs" />
     <Compile Include="Domain\User.cs" />
     <Compile Include="HelloWorldIntegratorRegistry.cs" />
+    <Compile Include="HelloWorldStructureMapRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecificationExtensions.cs" />
+    <Compile Include="UserTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Integrator\Integrator.csproj">
       <Project>{F2D977B1-1AFE-4827-83F0-946563DC756C}</Project>
       <Name>Integrator</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

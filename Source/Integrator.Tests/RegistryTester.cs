@@ -1,6 +1,10 @@
+using System.Collections.Generic;
+using Commander.Registration;
+using Commander.StructureMap;
 using Integrator.Registration;
 using Integrator.Tests.Domain;
 using NUnit.Framework;
+using StructureMap;
 
 namespace Integrator.Tests
 {
@@ -8,10 +12,15 @@ namespace Integrator.Tests
     public class RegistryTester
     {
         private DomainGraph _graph;
+        private CommandGraph _commandGraph;
         [SetUp]
         public void SetUp()
         {
-            _graph = new IntegratorTestRegistry().BuildGraph();
+            var registry = new IntegratorTestRegistry();
+            _graph = registry.BuildGraph();
+
+            var facility = new StructureMapContainerFacility(ObjectFactory.Container);
+            _commandGraph = registry.CommandRegistry.BuildGraph(facility.BuildEntityBuilderFactory());
         }
 
         [Test]
@@ -32,15 +41,20 @@ namespace Integrator.Tests
         }
 
         [Test]
-        public void generated_user_should_not_be_null()
+        public void command_graph_should_contain_chains_for_each_entity()
         {
-            var user = _graph
-                        .MapFor<User>()
-                        .GeneratorPolicy
-                        .Build(ValueRequest.For<User>())
-                        .Generate();
+            _graph
+                .EntityMaps
+                .Each(map =>
+                          {
+                              _commandGraph
+                                  .ChainForNew(map.EntityType)
+                                  .ShouldNotBeNull();
 
-            user.ShouldNotBeNull();
+                              _commandGraph
+                                  .ChainForExisting(map.EntityType)
+                                  .ShouldNotBeNull();
+                          });
         }
     }
 }

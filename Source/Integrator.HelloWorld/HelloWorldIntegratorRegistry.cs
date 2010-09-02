@@ -1,7 +1,4 @@
-using System;
-using Integrator.Generators;
 using Integrator.HelloWorld.Domain;
-using Integrator.Registration;
 
 namespace Integrator.HelloWorld
 {
@@ -10,31 +7,23 @@ namespace Integrator.HelloWorld
         public HelloWorldIntegratorRegistry()
         {
             Applies
-                 .ToThisAssembly();
+               .ToThisAssembly();
 
             Entities
                 .IncludedTypesInNamespaceContaining<EntityMarker>()
                 .Exclude<EntityMarker>();
 
-            Generators
-                .ApplyPolicy<MyGeneratorPolicy>();
+            Maps
+                .IgnoreCollections();
 
             Maps
                 .Alter<BlogPost>()
+                .Ignore(p => p.PostId)
                 .Ignore(p => p.Author);
-        }
-    }
 
-    public class MyGeneratorPolicy : IGeneratorPolicy
-    {
-        public bool Matches(ValueRequest request)
-        {
-            return true;
-        }
-
-        public IGenerator Build(ValueRequest request)
-        {
-            throw new NotImplementedException();
+            Maps
+                .Alter<User>()
+                .Ignore(u => u.UserId);
         }
     }
 }

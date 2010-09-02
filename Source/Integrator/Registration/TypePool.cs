@@ -29,6 +29,11 @@ namespace Integrator.Registration
             }
         }
 
+        public void EachAssembly(Action<Assembly> action)
+        {
+            _assemblies.Each(action);
+        }
+
         public void AddAssembly(Assembly assembly)
         {
             _assemblies.Add(assembly);

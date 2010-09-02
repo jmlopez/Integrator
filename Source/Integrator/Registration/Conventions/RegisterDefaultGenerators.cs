@@ -15,7 +15,7 @@ namespace Integrator.Registration.Conventions
         public RegisterDefaultGenerators(TypePool types)
         {
             _types = types;
-            _typeExpression = new TypeCandidateExpression(this, _types);
+            _typeExpression = new TypeCandidateExpression(this, _types, new NulloTypeCandidateExpression());
             _typeExpression.IncludedTypesInNamespaceContaining<IGenerator>();
             _typeExpression.IncludeTypesImplementing<IGenerator>();
             _typeExpression.ExcludeTypes(t => t.IsInterface || typeof (IEntityGenerator).IsAssignableFrom(t));
