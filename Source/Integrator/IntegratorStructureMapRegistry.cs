@@ -1,5 +1,6 @@
 ﻿using System;
 using FubuCore;
+using Integrator.Commands;
 using Integrator.Infrastructure;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
@@ -11,6 +12,14 @@ namespace Integrator
         public IntegratorStructureMapRegistry()
         {
             For<IRepository>().Use<Repository>();
+            For<IObjectDiffStrategy>().Use<ObjectDiffStrategy>();
+
+            var registry = new PropertyDiffRegistry();
+            registry.Register(new EqualityPropertyDiffStrategy());
+            registry.Register(new EnumerablePropertyDiffStrategy());
+
+            For<IPropertyDiffRegistry>().Use(registry);
+
             Scan(x =>
                      {
                          x.AssembliesFromApplicationBaseDirectory();

@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\Integrator.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -94,15 +95,31 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="IntegrationContext.cs" />
+    <Compile Include="Registration\Dsl\AutomatedTestsExpression.cs" />
     <Compile Include="Bootstrapping\TypeCandidateExpressionAdapter.cs" />
     <Compile Include="Commands\Conventions\FindEntitiesFromRepositoryConvention.cs" />
+    <Compile Include="Commands\DefaultVerificationCommand.cs" />
+    <Compile Include="Commands\Diff.cs" />
+    <Compile Include="Commands\DiffResult.cs" />
+    <Compile Include="Commands\EnumerablePropertyDiffStrategy.cs" />
+    <Compile Include="Commands\EqualityPropertyDiffStrategy.cs" />
     <Compile Include="Commands\FindEntityCommand.cs" />
+    <Compile Include="Commands\IObjectDiffStrategy.cs" />
+    <Compile Include="Commands\IPropertyDiffRegistry.cs" />
+    <Compile Include="Commands\IPropertyDiffStrategy.cs" />
+    <Compile Include="Commands\PropertyDiffRegistry.cs" />
+    <Compile Include="Registration\Dsl\EntityTestConfigurationExpression.cs" />
+    <Compile Include="IntegratorRegistryExtension.cs" />
+    <Compile Include="IVerificationCommand.cs" />
+    <Compile Include="Registration\Conventions\DefaultTestingConfigurationConvention.cs" />
+    <Compile Include="Registration\EntityTestConfiguration.cs" />
     <Compile Include="IIntegratorRegistryExtension.cs" />
     <Compile Include="Infrastructure\EntityRequest.cs" />
     <Compile Include="Infrastructure\IRepository.cs" />
     <Compile Include="Infrastructure\Repository.cs" />
     <Compile Include="IntegratorStructureMapRegistry.cs" />
-    <Compile Include="PersistEntityCommand.cs" />
+    <Compile Include="Commands\DefaultPersistEntityCommand.cs" />
     <Compile Include="Registration\Dsl\CommandsExpression.cs" />
     <Compile Include="CoreExtensions.cs" />
     <Compile Include="Registration\Conventions\RegisterDefaultGenerators.cs" />
@@ -116,7 +133,7 @@
     <Compile Include="Registration\Dsl\EntityMapAlterationExpression.cs" />
     <Compile Include="Registration\Dsl\GeneratorExpression.cs" />
     <Compile Include="Generators\IntGenerator.cs" />
-    <Compile Include="Integrator.cs" />
+    <Compile Include="IntegrationFactory.cs" />
     <Compile Include="Registration\Conventions\IgnoreCollectionsConvention.cs" />
     <Compile Include="Registration\Dsl\ITypeCandidateExpression.cs" />
     <Compile Include="Registration\Dsl\NulloTypeCandidateExpression.cs" />
@@ -148,8 +165,6 @@
     <Compile Include="Registration\RegistrationExtensions.cs" />
     <Compile Include="Registration\TypePool.cs" />
     <Compile Include="Registration\ValueRequest.cs" />
-    <Compile Include="RegistryImportExpression.cs" />
-    <Compile Include="RegistryMatcher.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

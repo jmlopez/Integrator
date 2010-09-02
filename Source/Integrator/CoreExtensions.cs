@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using FubuCore.Reflection;
 
 namespace Integrator
@@ -24,6 +25,22 @@ namespace Integrator
         {
             return typeof (IIntegratorRegistryExtension).IsAssignableFrom(type)
                    && type.IsClass && !type.IsAbstract;
+        }
+
+        public static int Count(this IEnumerable enumerable)
+        {
+            if(enumerable == null)
+            {
+                return 0;
+            }
+
+            int counter = 0;
+            foreach (var value in enumerable)
+            {
+                ++counter;
+            }
+
+            return counter;
         }
     }
 }

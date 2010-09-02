@@ -21,7 +21,11 @@ namespace Integrator.HelloWorld.Configuration
                                 m.FluentMappings.AddFromAssemblyOf<MapMarker>();
                                 m.FluentMappings.Conventions.AddFromAssemblyOf<CollectionAccessConvention>();
                             })
-                .ExposeConfiguration(cfg => new SchemaExport(cfg).Create(false, true))
+                .ExposeConfiguration(cfg =>
+                                         {
+                                             new SchemaExport(cfg).Create(false, true);
+                                             For<NHibernate.Cfg.Configuration>().Use(cfg);
+                                         })
                 .BuildSessionFactory();
 
             For<ISessionFactory>()

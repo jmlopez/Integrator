@@ -6,44 +6,18 @@ using NUnit.Framework;
 namespace Integrator.HelloWorld
 {
     [TestFixture]
-    public class UserTester
+    public class UserTester : IntegrationContext<User, HelloWorldStructureMapRegistry, HelloWorldIntegratorRegistry>
     {
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
+    }
+
+    public class InsertUserWithBlogPostCommand : IDomainCommand<User>
+    {
+        public void Execute(User entity)
         {
-            Integrator.Initialize(x => x.AddRegistry<HelloWorldStructureMapRegistry>(), new HelloWorldIntegratorRegistry());
+            var post = new BlogPost(entity);
+            IntegrationFactory.Fill(post);
+
+            entity.AddPost(post);
         }
-
-        [Test]
-        public void user_can_be_persisted()
-        {
-            var result = Integrator.GenerateAndPersist(new AddBlogPostCommand());
-            var retrievedUser = Integrator.Retrieve<User>(result.Entity.UserId);
-
-            retrievedUser
-                .FirstName
-                .ShouldEqual(result.Entity.FirstName);
-
-            retrievedUser
-                .LastName
-                .ShouldEqual(result.Entity.LastName);
-
-            retrievedUser
-                .Posts
-                .ShouldHaveCount(1);
-        }
-
-        #region Nested Type: AddBlogPostCommand
-        public class AddBlogPostCommand : IDomainCommand<User>
-        {
-            public void Execute(User entity)
-            {
-                var post = new BlogPost(entity);
-                Integrator.Fill(post);
-
-                entity.AddPost(post);
-            }
-        }
-        #endregion
     }
 }

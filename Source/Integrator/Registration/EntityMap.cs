@@ -19,10 +19,17 @@ namespace Integrator.Registration
         public Type EntityType { get; private set; }
         public IEnumerable<PropertyMap> PropertyMaps { get { return _propertyMaps; } }
         public IGeneratorPolicy GeneratorPolicy { get; private set; }
+        public EntityTestConfiguration TestConfiguration { get; private set; }
+        public bool IncludeInTests { get; set; }
 
         public void GenerateWith(IGeneratorPolicy policy)
         {
             GeneratorPolicy = policy;
+        }
+
+        public void Configure(EntityTestConfiguration configuration)
+        {
+            TestConfiguration = configuration;
         }
 
         public void AddPropertyMap(PropertyMap propertyMap)

@@ -1,8 +1,8 @@
 ﻿using Commander;
 
-namespace Integrator
+namespace Integrator.Commands
 {
-    public class PersistEntityCommand<TEntity> : IDomainCommand<TEntity>
+    public class DefaultPersistEntityCommand<TEntity> : IDomainCommand<TEntity>
         where TEntity : class
     {
         public void Execute(TEntity entity)

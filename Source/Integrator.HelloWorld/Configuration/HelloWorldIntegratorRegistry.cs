@@ -15,6 +15,9 @@ namespace Integrator.HelloWorld.Configuration
 
             Maps
                 .IgnoreCollections();
+
+            //AutomatedTests
+            //    .IncludeAllEntities();
         }
     }
 }

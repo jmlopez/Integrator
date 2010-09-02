@@ -71,5 +71,5 @@ desc "Runs all unit tests"
 nunit :unit_test do |nunit|
 	nunit.path_to_command = "lib/NUnit/nunit-console.exe"
 	nunit.assemblies "Source/#{ROOT_NAMESPACE}.Tests/bin/debug/#{ROOT_NAMESPACE}.Tests.dll"
-  nunit.parameters "/out:#{RESULTS_DIR}/nunit_results.xml"
+  nunit.parameters "/xml:#{RESULTS_DIR}/nunit_results.xml"
 end

@@ -10,6 +10,9 @@ namespace Integrator.HelloWorld.Configuration
                 .Alter<BlogPost>()
                 .Ignore(p => p.PostId)
                 .Ignore(p => p.Author);
+
+            //AutomatedTests
+            //    .Exclude<BlogPost>();
         }
     }
 }

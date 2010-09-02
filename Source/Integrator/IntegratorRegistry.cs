@@ -41,6 +41,8 @@ namespace Integrator
             _explicits.Add(graph => _generatorTypes.ImportAssemblies(_types));
             addConvention(graph => _generatorResolver.ApplyToAll(graph));
 
+            ApplyConvention<DefaultTestingConfigurationConvention>();
+
             Commands
                 .ApplyConvention<InitializeUnitOfWorkConvention>()
                 .ApplyConvention<CommitUnitOfWorkConvention>()
@@ -63,6 +65,7 @@ namespace Integrator
         public GeneratorRegistryExpression GeneratorRegistry { get { return new GeneratorRegistryExpression(_generatorModifications);}}
         public CommandRegistry CommandRegistry { get { return _commandRegistry; } }
         public CommandsExpression Commands { get { return new CommandsExpression(_commandRegistry); } }
+        public AutomatedTestsExpression AutomatedTests { get { return new AutomatedTestsExpression(_conventions); } }
 
 
         private void addConvention(Action<DomainGraph> convention)
