@@ -4,6 +4,8 @@ using System.Linq;
 using System.Linq.Expressions;
 using Commander;
 using Commander.StructureMap;
+using FluentNHibernate.Cfg;
+using FluentNHibernate.Cfg.Db;
 using FubuCore;
 using FubuCore.Reflection;
 using Integrator.Commands;
@@ -32,7 +34,7 @@ namespace Integrator
         public static void Initialize<TRegistry>(Action<IInitializationExpression> configure)
             where TRegistry : IntegratorRegistry, new()
         {
-            Initialize(configure, new TRegistry());
+            Initialize(configure, new TRegistry(), null);
         }
 
         /// <summary>
@@ -40,10 +42,17 @@ namespace Integrator
         /// </summary>
         /// <param name="configure"></param>
         /// <param name="registry"></param>
-        public static void Initialize(Action<IInitializationExpression> configure, IntegratorRegistry registry)
+        public static void Initialize(Action<IInitializationExpression> configure, IntegratorRegistry registry, DatabaseRegistry dbRegistry)
         {
             lock (typeof(IntegrationFactory))
             {
+                if (dbRegistry != null)
+                {
+                    dbRegistry
+                        .BuildManager()
+                        .EnsureDatabaseExists();
+                }
+
                 ObjectFactory.Initialize(configure);
                 ObjectFactory.Configure(x => x.IncludeRegistry<IntegratorStructureMapRegistry>());
 
@@ -55,6 +64,8 @@ namespace Integrator
 
                 var facility = new StructureMapContainerFacility(ObjectFactory.Container);
                 CommanderFactory.Initialize(facility, registry.CommandRegistry);
+
+                
             }
         }
         /// <summary>
@@ -64,7 +75,7 @@ namespace Integrator
         /// <param name="configure"></param>
         public static void Initialize(Action<IInitializationExpression> smConfigure, Action<IntegratorRegistry> configure)
         {
-            Initialize(smConfigure, new IntegratorRegistry(configure));
+            Initialize(smConfigure, new IntegratorRegistry(configure), null);
         }
 
         public static IEntityGenerator GeneratorFor<TEntity>()

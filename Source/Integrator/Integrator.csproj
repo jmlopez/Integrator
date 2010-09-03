@@ -85,6 +85,7 @@
       <HintPath>..\..\Lib\StructureMap\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -95,6 +96,10 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\ObjectDiffStrategy.cs" />
+    <Compile Include="DatabaseExpression.cs" />
+    <Compile Include="DatabaseManager.cs" />
+    <Compile Include="DatabaseRegistry.cs" />
     <Compile Include="IntegrationContext.cs" />
     <Compile Include="Registration\Dsl\AutomatedTestsExpression.cs" />
     <Compile Include="Bootstrapping\TypeCandidateExpressionAdapter.cs" />
@@ -113,6 +118,7 @@
     <Compile Include="IntegratorRegistryExtension.cs" />
     <Compile Include="IVerificationCommand.cs" />
     <Compile Include="Registration\Conventions\DefaultTestingConfigurationConvention.cs" />
+    <Compile Include="Registration\Conventions\IgnorePropertiesConvention.cs" />
     <Compile Include="Registration\EntityTestConfiguration.cs" />
     <Compile Include="IIntegratorRegistryExtension.cs" />
     <Compile Include="Infrastructure\EntityRequest.cs" />

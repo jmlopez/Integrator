@@ -17,13 +17,15 @@ namespace Integrator.HelloWorld.Configuration
             var sessionFactory = Fluently.Configure()
                 .Database(MsSqlConfiguration.MsSql2008.ConnectionString(c => c.FromConnectionStringWithKey("HelloWorld")).ShowSql())
                 .Mappings(m =>
-                            {
-                                m.FluentMappings.AddFromAssemblyOf<MapMarker>();
-                                m.FluentMappings.Conventions.AddFromAssemblyOf<CollectionAccessConvention>();
-                            })
+                              {
+                                  m.FluentMappings.AddFromAssemblyOf<MapMarker>();
+                                  m.FluentMappings.Conventions.AddFromAssemblyOf<CollectionAccessConvention>();
+                              })
                 .ExposeConfiguration(cfg =>
                                          {
-                                             new SchemaExport(cfg).Create(false, true);
+                                             var schemaExport = new SchemaExport(cfg);
+                                             schemaExport.Drop(true, true);
+                                             schemaExport.Create(true, true);
                                              For<NHibernate.Cfg.Configuration>().Use(cfg);
                                          })
                 .BuildSessionFactory();

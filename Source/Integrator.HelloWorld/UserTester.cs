@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Integrator.HelloWorld
 {
     [TestFixture]
-    public class UserTester : IntegrationContext<User, HelloWorldStructureMapRegistry, HelloWorldIntegratorRegistry>
+    public class UserTester : IntegrationContext<User, HelloWorldStructureMapRegistry, HelloWorldIntegratorRegistry, HelloWorldDbRegistry>
     {
     }
 

@@ -14,10 +14,8 @@ namespace Integrator.HelloWorld.Configuration
                 .Exclude<EntityMarker>();
 
             Maps
-                .IgnoreCollections();
-
-            //AutomatedTests
-            //    .IncludeAllEntities();
+                .IgnoreCollections()
+                .IgnoreProperties(p => p.Name.EndsWith("Id"));
         }
     }
 }

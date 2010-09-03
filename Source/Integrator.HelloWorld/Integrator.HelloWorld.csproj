@@ -98,6 +98,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\BlogPostIntegratorExtension.cs" />
+    <Compile Include="Configuration\HelloWorldDbRegistry.cs" />
     <Compile Include="Configuration\UserIntegratorExtension.cs" />
     <Compile Include="Domain\BlogPost.cs" />
     <Compile Include="Domain\EntityMarker.cs" />

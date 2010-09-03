@@ -4,15 +4,16 @@ using StructureMap.Configuration.DSL;
 namespace Integrator
 {
     [TestFixture]
-    public class IntegrationContext<TEntity, TStructureMapRegistry, TIntegratorRegistry>
+    public class IntegrationContext<TEntity, TStructureMapRegistry, TIntegratorRegistry, TDatabaseRegistry>
         where TEntity : class
         where TStructureMapRegistry : Registry, new()
         where TIntegratorRegistry : IntegratorRegistry, new()
+        where TDatabaseRegistry : DatabaseRegistry, new()
     {
         [TestFixtureSetUp]
         public void TestFixtureSetUp()
         {
-            IntegrationFactory.Initialize(x => x.AddRegistry<TStructureMapRegistry>(), new TIntegratorRegistry());
+            IntegrationFactory.Initialize(x => x.AddRegistry<TStructureMapRegistry>(), new TIntegratorRegistry(), new TDatabaseRegistry());
         }
 
         [Test]

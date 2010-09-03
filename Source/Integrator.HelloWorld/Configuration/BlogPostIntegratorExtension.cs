@@ -8,7 +8,6 @@ namespace Integrator.HelloWorld.Configuration
         {
             Maps
                 .Alter<BlogPost>()
-                .Ignore(p => p.PostId)
                 .Ignore(p => p.Author);
 
             //AutomatedTests
