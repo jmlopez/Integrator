@@ -4,8 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using Commander;
 using Commander.StructureMap;
-using FluentNHibernate.Cfg;
-using FluentNHibernate.Cfg.Db;
 using FubuCore;
 using FubuCore.Reflection;
 using Integrator.Commands;
@@ -26,6 +24,7 @@ namespace Integrator
         /// </summary>
         public static DomainGraph Graph { get { return _graph; } }
 
+        #region Initialization
         /// <summary>
         /// Initializes the integration framework.
         /// </summary>
@@ -35,6 +34,16 @@ namespace Integrator
             where TRegistry : IntegratorRegistry, new()
         {
             Initialize(configure, new TRegistry(), null);
+        }
+
+        /// <summary>
+        /// Initializes the integration framework.
+        /// </summary>
+        /// <param name="configure"></param>
+        /// <param name="registry"></param>
+        public static void Initialize(Action<IInitializationExpression> configure, IntegratorRegistry registry)
+        {
+            Initialize(configure, registry, null);
         }
 
         /// <summary>
@@ -77,7 +86,9 @@ namespace Integrator
         {
             Initialize(smConfigure, new IntegratorRegistry(configure), null);
         }
+        #endregion
 
+        #region Generation and Persistence
         public static IEntityGenerator GeneratorFor<TEntity>()
             where TEntity : class
         {
@@ -144,7 +155,9 @@ namespace Integrator
                     .GetInstance<IRepository>()
                     .Find<TEntity>(id);
         }
+        #endregion
 
+        #region Testing
         /// <summary>
         /// Tests the entity by leveraging the nhibernate mappings exposed to structuremap.
         /// </summary>
@@ -185,5 +198,6 @@ namespace Integrator
             var afterInsert = Retrieve<TEntity>(identifer(result.Entity));
             verifyCommand.Verify(result.Entity, afterInsert);
         }
+        #endregion
     }
 }
