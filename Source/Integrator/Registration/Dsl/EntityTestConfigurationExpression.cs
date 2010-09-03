@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Commander;
+using Integrator.Commands;
 
 namespace Integrator.Registration.Dsl
 {
@@ -23,29 +24,63 @@ namespace Integrator.Registration.Dsl
                                                                   {
                                                                       map
                                                                           .TestConfiguration
-                                                                          .VerifyWith(_testConfiguration.VerificationCommandType);
+                                                                          .VerificationCommandType = _testConfiguration.VerificationCommandType;
                                                                   }
 
-                                                                  if (_testConfiguration.CommandType != null)
+                                                                  if (_testConfiguration.InsertCommandType != null)
                                                                   {
                                                                       map
                                                                           .TestConfiguration
-                                                                          .InsertWith(_testConfiguration.CommandType);
+                                                                          .InsertCommandType = _testConfiguration.InsertCommandType;
+                                                                  }
+
+                                                                  if (_testConfiguration.DeleteCommandType != null)
+                                                                  {
+                                                                      map
+                                                                          .TestConfiguration
+                                                                          .DeleteCommandType = _testConfiguration.DeleteCommandType;
+                                                                  }
+
+                                                                  if (_testConfiguration.UpdateCommandType != null)
+                                                                  {
+                                                                      map
+                                                                          .TestConfiguration
+                                                                          .UpdateCommandType = _testConfiguration.UpdateCommandType;
                                                                   }
                                                               }));
+        }
+
+        public EntityTestConfigurationExpression<TEntity> AutoDelete()
+        {
+            _testConfiguration.DeleteCommandType = typeof (DefaultDeleteEntityCommand<TEntity>);
+            return this;
         }
 
         public EntityTestConfigurationExpression<TEntity> InsertWith<TCommand>()
             where TCommand : IDomainCommand<TEntity>
         {
-            _testConfiguration.InsertWith(typeof(TCommand));
+            _testConfiguration.InsertCommandType = typeof(TCommand);
             return this;
         }
 
         public EntityTestConfigurationExpression<TEntity> VerifyWith<TCommand>()
             where TCommand : IVerificationCommand<TEntity>
         {
-            _testConfiguration.VerifyWith(typeof(TCommand));
+            _testConfiguration.VerificationCommandType =  typeof(TCommand);
+            return this;
+        }
+
+        public EntityTestConfigurationExpression<TEntity> DeleteWith<TCommand>()
+            where TCommand : IDomainCommand<TEntity>
+        {
+            _testConfiguration.DeleteCommandType = typeof (TCommand);
+            return this;
+        }
+
+        public EntityTestConfigurationExpression<TEntity> UpdateWith<TCommand>()
+            where TCommand : IDomainCommand<TEntity>
+        {
+            _testConfiguration.UpdateCommandType = typeof(TCommand);
             return this;
         }
     }

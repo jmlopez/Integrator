@@ -20,6 +20,11 @@ namespace Integrator
         public void entity_can_be_persisted_and_retrieved()
         {
             IntegrationFactory.Test<TEntity>();
+            AfterTest();
+        }
+
+        protected virtual void AfterTest()
+        {
         }
     }
 
@@ -39,6 +44,11 @@ namespace Integrator
         public void entity_can_be_persisted_and_retrieved()
         {
             IntegrationFactory.Test<TEntity>();
+            AfterTest();
+        }
+
+        protected virtual void AfterTest()
+        {
         }
     }
 }

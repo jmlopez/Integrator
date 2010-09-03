@@ -8,7 +8,8 @@ namespace Integrator.HelloWorld.Configuration
         {
             AutomatedTests
                 .Configure<User>()
-                .InsertWith<InsertUserWithBlogPostCommand>();
+                .InsertWith<InsertUserWithBlogPostCommand>()
+                .AutoDelete();
         }
     }
 }

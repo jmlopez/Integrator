@@ -12,8 +12,8 @@ namespace Integrator.Registration.Conventions
                 .Each(map =>
                           {
                               var config = new EntityTestConfiguration(map.EntityType);
-                              config.InsertWith(typeof(DefaultPersistEntityCommand<>).MakeGenericType(map.EntityType));
-                              config.VerifyWith(typeof(DefaultVerificationCommand<>).MakeGenericType(map.EntityType));
+                              config.InsertCommandType = typeof(DefaultPersistEntityCommand<>).MakeGenericType(map.EntityType);
+                              config.VerificationCommandType = typeof(DefaultVerificationCommand<>).MakeGenericType(map.EntityType);
 
                               map.Configure(config);
                           });

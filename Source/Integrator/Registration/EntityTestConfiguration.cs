@@ -10,17 +10,9 @@ namespace Integrator.Registration
         }
 
         public Type EntityType { get; private set; }
-        public Type CommandType { get; private set; }
-        public Type VerificationCommandType { get; private set; }
-
-        public void InsertWith(Type commandType)
-        {
-            CommandType = commandType;
-        }
-
-        public void VerifyWith(Type commandType)
-        {
-            VerificationCommandType = commandType;
-        }
+        public Type InsertCommandType { get; set; }
+        public Type UpdateCommandType { get; set; }
+        public Type VerificationCommandType { get; set; }
+        public Type DeleteCommandType { get; set; }
     }
 }

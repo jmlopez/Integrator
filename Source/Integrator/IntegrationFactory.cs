@@ -122,16 +122,35 @@ namespace Integrator
         public static InvocationResult<TEntity> GenerateAndPersist<TEntity>()
             where TEntity : class
         {
-            return GenerateAndPersist<TEntity>(new DefaultPersistEntityCommand<TEntity>());
+            return GenerateAndPersist<TEntity>(false);
+        }
+
+        public static InvocationResult<TEntity> GenerateAndPersist<TEntity>(bool autoDelete)
+            where TEntity : class
+        {
+            return GenerateAndPersist<TEntity>(new DefaultPersistEntityCommand<TEntity>(), autoDelete);
         }
 
         public static InvocationResult<TEntity> GenerateAndPersist<TEntity>(IDomainCommand<TEntity> command)
             where TEntity : class
         {
+            return GenerateAndPersist(command, false);
+        }
+
+        public static InvocationResult<TEntity> GenerateAndPersist<TEntity>(IDomainCommand<TEntity> command, bool autoDelete)
+            where TEntity : class
+        {
             var entity = Generate<TEntity>();
-            return CommanderFactory
-                    .Invoker
-                    .ForNew(ctx => ctx.Set(entity), command);
+            var result = CommanderFactory
+                            .Invoker
+                            .ForNew(ctx => ctx.Set(entity), command);
+
+            if(autoDelete)
+            {
+                Delete(result.Entity);
+            }
+
+            return result;
         }
 
         public static InvocationResult<TEntity> Persist<TEntity>(TEntity entity)
@@ -155,6 +174,19 @@ namespace Integrator
                     .GetInstance<IRepository>()
                     .Find<TEntity>(id);
         }
+
+        public static void Delete<TEntity>(TEntity entity)
+            where TEntity : class
+        {
+            Delete(ObjectFactory.GetInstance<DefaultDeleteEntityCommand<TEntity>>(), entity);
+        }
+
+        public static void Delete<TEntity>(IDomainCommand<TEntity> command, TEntity entity)
+            where TEntity : class
+        {
+            command.Execute(entity);
+        }
+
         #endregion
 
         #region Testing
@@ -186,17 +218,39 @@ namespace Integrator
             where TEntity : class
         {
             var config = Graph.MapFor<TEntity>().TestConfiguration;
-            var insertCommand = ObjectFactory.GetInstance(config.CommandType).As<IDomainCommand<TEntity>>();
+            var insertCommand = ObjectFactory.GetInstance(config.InsertCommandType).As<IDomainCommand<TEntity>>();
             var verifyCommand = ObjectFactory.GetInstance(config.VerificationCommandType).As<IVerificationCommand<TEntity>>();
 
             var result = GenerateAndPersist(insertCommand);
-            if (result.HasProblems)
+            AssertionException failedAssertion = null;
+            try
             {
-                Assert.Fail(result.Problems.First().Exception.Message);
+                if (result.HasProblems)
+                {
+                    Assert.Fail(result.Problems.First().Exception.Message);
+                }
+
+                var afterInsert = Retrieve<TEntity>(identifer(result.Entity));
+                verifyCommand.Verify(result.Entity, afterInsert);
+            }
+            catch (AssertionException exc)
+            {
+                failedAssertion = exc;
             }
 
-            var afterInsert = Retrieve<TEntity>(identifer(result.Entity));
-            verifyCommand.Verify(result.Entity, afterInsert);
+            if (config.DeleteCommandType != null)
+            {
+                ObjectFactory
+                    .GetInstance(config.DeleteCommandType)
+                    .As<IDomainCommand<TEntity>>()
+                    .Execute(result.Entity);
+            }
+
+            if(failedAssertion != null)
+            {
+                throw failedAssertion;
+            }
+            
         }
         #endregion
     }

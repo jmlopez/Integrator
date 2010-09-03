@@ -1,4 +1,6 @@
-﻿using NHibernate;
+﻿using System;
+using System.Collections.Generic;
+using NHibernate;
 
 namespace Integrator.Infrastructure
 {
@@ -15,6 +17,13 @@ namespace Integrator.Infrastructure
             where TEntity : class
         {
             return _session.Get<TEntity>(id);
+        }
+
+        public IEnumerable<TEntity> GetAll<TEntity>() where TEntity : class
+        {
+            return _session
+                    .CreateCriteria<TEntity>()
+                    .List<TEntity>();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Integrator.Commands
             var diffResult = _diffStrategy.Diff(beforeInsert, afterInsert);
             if(diffResult.IsEmpty)
             {
-                Assert.Pass();
+                return;
             }
 
             foreach (var diff in diffResult.Diffs)
