@@ -2,6 +2,7 @@
 using FubuCore;
 using Integrator.Commands;
 using Integrator.Infrastructure;
+using ProAceFx.Core.Configuration;
 using StructureMap.Configuration.DSL;
 using StructureMap.Graph;
 
@@ -11,6 +12,8 @@ namespace Integrator
     {
         public IntegratorStructureMapRegistry()
         {
+            IncludeRegistry<ProAceCoreRegistry>();
+            
             For<IRepository>().Use<Repository>();
             For<IObjectDiffStrategy>().Use<ObjectDiffStrategy>();
 

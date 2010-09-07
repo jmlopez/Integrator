@@ -18,13 +18,14 @@ namespace Integrator.Generators
         public object Generate()
         {
             var entity = _entityType.GetDefaultInstance();
-            Fill(entity, _graph, _graph.MapFor(_entityType));
+            Fill(entity, _graph);
 
             return entity;
         }
 
-        public void Fill(object entity, DomainGraph graph, EntityMap map)
+        public void Fill(object entity, DomainGraph graph)
         {
+            var map = graph.MapFor(entity.GetType());
             map
                 .PropertyMaps
                 .Each(propertyMap =>

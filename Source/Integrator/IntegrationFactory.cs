@@ -1,16 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using Commander;
 using Commander.StructureMap;
-using FubuCore;
-using FubuCore.Reflection;
-using Integrator.Commands;
 using Integrator.Generators;
-using Integrator.Infrastructure;
 using Integrator.Registration;
-using NUnit.Framework;
 using StructureMap;
 
 namespace Integrator
@@ -18,11 +12,17 @@ namespace Integrator
     public static class IntegrationFactory
     {
         private static DomainGraph _graph;
-
+        private static IntegrationRunner _runner;
+        
         /// <summary>
         /// Gets the currently configured domain graph.
         /// </summary>
         public static DomainGraph Graph { get { return _graph; } }
+        
+        /// <summary>
+        /// Gets the currently configured integration runner.
+        /// </summary>
+        public static IIntegrationRunner Runner { get { return _runner; } }
 
         #region Initialization
         /// <summary>
@@ -30,10 +30,10 @@ namespace Integrator
         /// </summary>
         /// <typeparam name="TRegistry"></typeparam>
         /// <param name="configure"></param>
-        public static void Initialize<TRegistry>(Action<IInitializationExpression> configure)
+        public static void Initialize<TRegistry>(Action<ConfigurationExpression> configure)
             where TRegistry : IntegratorRegistry, new()
         {
-            Initialize(configure, new TRegistry(), null);
+            Initialize(configure, new TRegistry());
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Integrator
         /// </summary>
         /// <param name="configure"></param>
         /// <param name="registry"></param>
-        public static void Initialize(Action<IInitializationExpression> configure, IntegratorRegistry registry)
+        public static void Initialize(Action<ConfigurationExpression> configure, IntegratorRegistry registry)
         {
             Initialize(configure, registry, null);
         }
@@ -51,30 +51,33 @@ namespace Integrator
         /// </summary>
         /// <param name="configure"></param>
         /// <param name="registry"></param>
-        public static void Initialize(Action<IInitializationExpression> configure, IntegratorRegistry registry, DatabaseRegistry dbRegistry)
+        public static void Initialize(Action<ConfigurationExpression> configure, IntegratorRegistry registry, Action<DatabaseExpression> configureDb)
         {
             lock (typeof(IntegrationFactory))
             {
-                if (dbRegistry != null)
+                if (configureDb != null)
                 {
-                    dbRegistry
-                        .BuildManager()
+                    var dbManager = new DatabaseManager();
+                    var dbExpression = new DatabaseExpression(dbManager);
+                    configureDb(dbExpression);
+
+                    dbManager
                         .EnsureDatabaseExists();
                 }
 
-                ObjectFactory.Initialize(configure);
-                ObjectFactory.Configure(x => x.IncludeRegistry<IntegratorStructureMapRegistry>());
+                var container = new Container(configure);
+                container.Configure(x => x.IncludeRegistry<IntegratorStructureMapRegistry>());
 
-                ObjectFactory
+                container
                     .GetAllInstances<IIntegratorRegistryExtension>()
                     .Each(ext => ext.Configure(registry));
 
                 _graph = registry.BuildGraph();
 
-                var facility = new StructureMapContainerFacility(ObjectFactory.Container);
+                var facility = new StructureMapContainerFacility(container);
                 CommanderFactory.Initialize(facility, registry.CommandRegistry);
 
-                
+                _runner = new IntegrationRunner(_graph, container, CommanderFactory.Invoker);
             }
         }
         /// <summary>
@@ -82,7 +85,7 @@ namespace Integrator
         /// </summary>
         /// <param name="smConfigure"></param>
         /// <param name="configure"></param>
-        public static void Initialize(Action<IInitializationExpression> smConfigure, Action<IntegratorRegistry> configure)
+        public static void Initialize(Action<ConfigurationExpression> smConfigure, Action<IntegratorRegistry> configure)
         {
             Initialize(smConfigure, new IntegratorRegistry(configure), null);
         }
@@ -92,19 +95,13 @@ namespace Integrator
         public static IEntityGenerator GeneratorFor<TEntity>()
             where TEntity : class
         {
-            return _graph
-                    .MapFor<TEntity>()
-                    .GeneratorPolicy
-                    .Build(ValueRequest.For<TEntity>())
-                    .As<IEntityGenerator>();
+            return _runner.GeneratorFor<TEntity>();
         }
 
         public static TEntity Generate<TEntity>()
             where TEntity : class
         {
-            return GeneratorFor<TEntity>()
-                    .Generate()
-                    .As<TEntity>();
+            return _runner.Generate<TEntity>();
         }
 
         /// <summary>
@@ -115,76 +112,61 @@ namespace Integrator
         public static void Fill<TEntity>(TEntity entity)
             where TEntity : class
         {
-            GeneratorFor<TEntity>()
-                .Fill(entity, Graph, Graph.MapFor<TEntity>());
+            _runner.Fill(entity);
         }
 
         public static InvocationResult<TEntity> GenerateAndPersist<TEntity>()
             where TEntity : class
         {
-            return GenerateAndPersist<TEntity>(false);
+            return _runner.GenerateAndPersist<TEntity>();
         }
 
         public static InvocationResult<TEntity> GenerateAndPersist<TEntity>(bool autoDelete)
             where TEntity : class
         {
-            return GenerateAndPersist<TEntity>(new DefaultPersistEntityCommand<TEntity>(), autoDelete);
+            return _runner.GenerateAndPersist<TEntity>(autoDelete);
         }
 
         public static InvocationResult<TEntity> GenerateAndPersist<TEntity>(IDomainCommand<TEntity> command)
             where TEntity : class
         {
-            return GenerateAndPersist(command, false);
+            return _runner.GenerateAndPersist(command);
         }
 
         public static InvocationResult<TEntity> GenerateAndPersist<TEntity>(IDomainCommand<TEntity> command, bool autoDelete)
             where TEntity : class
         {
-            var entity = Generate<TEntity>();
-            var result = CommanderFactory
-                            .Invoker
-                            .ForNew(ctx => ctx.Set(entity), command);
-
-            if(autoDelete)
-            {
-                Delete(result.Entity);
-            }
-
-            return result;
+            return _runner.GenerateAndPersist(command, autoDelete);
         }
 
         public static InvocationResult<TEntity> Persist<TEntity>(TEntity entity)
             where TEntity : class
         {
-            return Persist(entity, new DefaultPersistEntityCommand<TEntity>());
+            return _runner.Persist(entity);
         }
 
         public static InvocationResult<TEntity> Persist<TEntity>(TEntity entity, IDomainCommand<TEntity> command)
             where TEntity : class
         {
-            return CommanderFactory
-                    .Invoker
-                    .ForNew(ctx => ctx.Set(entity), command);
+            return _runner.Persist(entity, command);
         }
 
         public static TEntity Retrieve<TEntity>(object id)
             where TEntity : class
         {
-            return ObjectFactory
-                    .GetInstance<IRepository>()
-                    .Find<TEntity>(id);
+            return _runner.Retrieve<TEntity>(id);
         }
 
         public static void Delete<TEntity>(TEntity entity)
             where TEntity : class
         {
-            Delete(ObjectFactory.GetInstance<DefaultDeleteEntityCommand<TEntity>>(), entity);
+            _runner.Delete(entity);
         }
 
         public static void Delete<TEntity>(IDomainCommand<TEntity> command, TEntity entity)
             where TEntity : class
         {
-            command.Execute(entity);
+            _runner.Delete(command, entity);
         }
 
         #endregion
@@ -197,60 +179,13 @@ namespace Integrator
         public static void Test<TEntity>()
             where TEntity : class
         {
-            var mapping = ObjectFactory
-                            .GetInstance<NHibernate.Cfg.Configuration>()
-                            .GetClassMapping(typeof(TEntity));
-
-            var prop = typeof(TEntity).GetProperty(mapping.IdentifierProperty.Name);
-
-            Func<TEntity, object> identifier = e => prop.GetValue(e, null);
-            Test(identifier);
+            _runner.Test<TEntity>();
         }
 
         public static void Test<TEntity>(Expression<Func<TEntity, object>> identifier)
             where TEntity : class
         {
-            Func<TEntity, object> func = e => identifier.ToAccessor().GetValue(e);
-            Test(func);
-        }
-
-        private static void Test<TEntity>(Func<TEntity, object> identifer)
-            where TEntity : class
-        {
-            var config = Graph.MapFor<TEntity>().TestConfiguration;
-            var insertCommand = ObjectFactory.GetInstance(config.InsertCommandType).As<IDomainCommand<TEntity>>();
-            var verifyCommand = ObjectFactory.GetInstance(config.VerificationCommandType).As<IVerificationCommand<TEntity>>();
-
-            var result = GenerateAndPersist(insertCommand);
-            AssertionException failedAssertion = null;
-            try
-            {
-                if (result.HasProblems)
-                {
-                    Assert.Fail(result.Problems.First().Exception.Message);
-                }
-
-                var afterInsert = Retrieve<TEntity>(identifer(result.Entity));
-                verifyCommand.Verify(result.Entity, afterInsert);
-            }
-            catch (AssertionException exc)
-            {
-                failedAssertion = exc;
-            }
-
-            if (config.DeleteCommandType != null)
-            {
-                ObjectFactory
-                    .GetInstance(config.DeleteCommandType)
-                    .As<IDomainCommand<TEntity>>()
-                    .Execute(result.Entity);
-            }
-
-            if(failedAssertion != null)
-            {
-                throw failedAssertion;
-            }
-            
+            _runner.Test(identifier);
         }
         #endregion
     }

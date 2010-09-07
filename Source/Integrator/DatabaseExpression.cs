@@ -9,6 +9,12 @@
             _manager = manager;
         }
 
+        public DatabaseExpression AutoDrop(bool autoDrop)
+        {
+            _manager.AutoDrop = autoDrop;
+            return this;
+        }
+
         public DatabaseExpression Use(string dbName)
         {
             _manager.DatabaseName = dbName;

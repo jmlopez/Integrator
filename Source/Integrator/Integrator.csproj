@@ -100,8 +100,10 @@
     <Compile Include="Commands\ObjectDiffStrategy.cs" />
     <Compile Include="DatabaseExpression.cs" />
     <Compile Include="DatabaseManager.cs" />
-    <Compile Include="DatabaseRegistry.cs" />
+    <Compile Include="EntityIntegrationContext.cs" />
+    <Compile Include="IIntegrationRunner.cs" />
     <Compile Include="IntegrationContext.cs" />
+    <Compile Include="IntegrationRunner.cs" />
     <Compile Include="Registration\Dsl\AutomatedTestsExpression.cs" />
     <Compile Include="Bootstrapping\TypeCandidateExpressionAdapter.cs" />
     <Compile Include="Commands\Conventions\FindEntitiesFromRepositoryConvention.cs" />

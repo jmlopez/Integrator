@@ -1,32 +1,27 @@
-using Commander;
 using Integrator.HelloWorld.Configuration;
 using Integrator.HelloWorld.Domain;
 using Integrator.Infrastructure;
 using NUnit.Framework;
-using StructureMap;
 
 namespace Integrator.HelloWorld
 {
     [TestFixture]
-    public class UserTester : IntegrationContext<User, HelloWorldStructureMapRegistry, HelloWorldIntegratorRegistry, HelloWorldDbRegistry>
+    public class UserTester : EntityIntegrationContext<User, HelloWorldStructureMapRegistry, HelloWorldIntegratorRegistry>
     {
+        protected override void ConfigureDatabase(DatabaseExpression expression)
+        {
+            expression
+                .AutoDrop(true)
+                .Use("HelloWorld")
+                .ConnectWith("Integrator");
+        }
+
         protected override void AfterTest()
         {
-            ObjectFactory
+            Container
                 .GetInstance<IRepository>()
                 .GetAll<User>()
                 .ShouldHaveCount(0);
-        }
-    }
-
-    public class InsertUserWithBlogPostCommand : IDomainCommand<User>
-    {
-        public void Execute(User entity)
-        {
-            var post = new BlogPost(entity);
-            IntegrationFactory.Fill(post);
-
-            entity.AddPost(post);
         }
     }
 }

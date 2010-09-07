@@ -5,11 +5,17 @@ namespace Integrator
 {
     public class DatabaseManager
     {
+        public bool AutoDrop { get; set; }
         public string DatabaseName { get; set; }
         public string ConnectionStringName { get; set; }
 
         public void EnsureDatabaseExists()
         {
+            if(!AutoDrop)
+            {
+                return;
+            }
+
             // TODO -- clean this up
             var connStr = ConfigurationManager.ConnectionStrings[ConnectionStringName];
             if(connStr == null || string.IsNullOrEmpty(DatabaseName))

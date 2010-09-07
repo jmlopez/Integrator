@@ -1,6 +1,7 @@
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using Integrator.HelloWorld.Domain.Persistence;
+using Integrator.HelloWorld.Repositories;
 using NHibernate;
 using NHibernate.Tool.hbm2ddl;
 using ProAceFx.Core.Configuration;
@@ -36,6 +37,8 @@ namespace Integrator.HelloWorld.Configuration
 
             For<ISession>()
                 .Use(ctx => ctx.GetInstance<ISessionFactory>().OpenSession());
+
+            For<IUserRepository>().Use<UserRepository>();
         }
     }
 }

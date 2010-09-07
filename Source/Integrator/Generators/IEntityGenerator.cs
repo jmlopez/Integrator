@@ -4,6 +4,6 @@ namespace Integrator.Generators
 {
     public interface IEntityGenerator : IGenerator
     {
-        void Fill(object entity, DomainGraph graph, EntityMap map);
+        void Fill(object entity, DomainGraph graph);
     }
 }
