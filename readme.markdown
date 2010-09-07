@@ -1,6 +1,6 @@
 What is Integrator?
 --
-Integrator is a framework that provides conventional chains of responsibility for domain commands.
+Integrator is a framework that provides conventional integration testing.
 
 
 Where is CommonAssemblyInfo.cs?

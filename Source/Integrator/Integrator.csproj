@@ -69,17 +69,14 @@
     <Reference Include="nunit.framework">
       <HintPath>..\..\Lib\NUnit\framework\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="ProAceFx, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ProAceFx\Build\ProAceFx.dll</HintPath>
+    <Reference Include="ProAceFx">
+      <HintPath>..\..\Lib\ProAceFx\ProAceFx.dll</HintPath>
     </Reference>
-    <Reference Include="ProAceFx.Commander, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ProAceFx\Build\ProAceFx.Commander.dll</HintPath>
+    <Reference Include="ProAceFx.Commander">
+      <HintPath>..\..\Lib\ProAceFx\ProAceFx.Commander.dll</HintPath>
     </Reference>
-    <Reference Include="ProAceFx.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\ProAceFx\Build\ProAceFx.Core.dll</HintPath>
+    <Reference Include="ProAceFx.Core">
+      <HintPath>..\..\Lib\ProAceFx\ProAceFx.Core.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
       <HintPath>..\..\Lib\StructureMap\StructureMap.dll</HintPath>
