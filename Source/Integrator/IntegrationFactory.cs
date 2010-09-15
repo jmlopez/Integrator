@@ -74,7 +74,7 @@ namespace Integrator
 
                 _graph = registry.BuildGraph();
 
-                var facility = new StructureMapContainerFacility(container);
+                var facility = new StructureMapCommanderContainer(container);
                 CommanderFactory.Initialize(facility, registry.CommandRegistry);
 
                 _runner = new IntegrationRunner(_graph, container, CommanderFactory.Invoker);

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Commander.Registration.Dsl;
+using Commander;
 using Integrator.Bootstrapping;
 using Integrator.Commands.Conventions;
 using Integrator.Registration;

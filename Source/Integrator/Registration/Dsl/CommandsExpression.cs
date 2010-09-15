@@ -1,4 +1,4 @@
-﻿using Commander.Registration.Dsl;
+﻿using Commander;
 
 namespace Integrator.Registration.Dsl
 {

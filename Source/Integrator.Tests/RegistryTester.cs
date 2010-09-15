@@ -19,8 +19,7 @@ namespace Integrator.Tests
             var registry = new IntegratorTestRegistry();
             _graph = registry.BuildGraph();
 
-            var facility = new StructureMapContainerFacility(ObjectFactory.Container);
-            _commandGraph = registry.CommandRegistry.BuildGraph(facility.BuildEntityBuilderFactory());
+            _commandGraph = registry.CommandRegistry.BuildGraph();
         }
 
         [Test]
