@@ -115,6 +115,33 @@ namespace Integrator
             _runner.Fill(entity);
         }
 
+        public static TEntity AutoFill<TEntity>()
+            where TEntity : class, new()
+        {
+            return _runner.AutoFill<TEntity>();
+        }
+
+        public static void AutoFill<TEntity>(TEntity entity)
+            where TEntity : class
+
+        {
+            _runner.AutoFill(entity);
+        }
+
+        public static TEntity AutoFill<TEntity, TCommand>()
+            where TEntity : class, new()
+            where TCommand : IDomainCommand<TEntity>
+        {
+            return _runner.AutoFill<TEntity, TCommand>();
+        }
+
+        public static void AutoFill<TEntity, TCommand>(TEntity entity)
+            where TEntity : class
+            where TCommand : IDomainCommand<TEntity>
+        {
+            _runner.AutoFill<TEntity, TCommand>(entity);
+        }
+
         public static InvocationResult<TEntity> GenerateAndPersist<TEntity>()
             where TEntity : class
         {

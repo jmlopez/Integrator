@@ -16,6 +16,20 @@ namespace Integrator
         void Fill<TEntity>(TEntity entity)
             where TEntity : class;
 
+        TEntity AutoFill<TEntity>()
+            where TEntity : class, new();
+        
+        void AutoFill<TEntity>(TEntity entity)
+            where TEntity : class;
+
+        TEntity AutoFill<TEntity, TCommand>()
+            where TEntity : class, new()
+            where TCommand : IDomainCommand<TEntity>;
+        
+        void AutoFill<TEntity, TCommand>(TEntity entity)
+            where TEntity : class
+            where TCommand : IDomainCommand<TEntity>;
+
         InvocationResult<TEntity> GenerateAndPersist<TEntity>()
             where TEntity : class;
 

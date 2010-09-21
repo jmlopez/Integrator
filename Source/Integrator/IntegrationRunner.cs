@@ -54,6 +54,49 @@ namespace Integrator
                 .Fill(entity, _domainGraph);
         }
 
+        public TEntity AutoFill<TEntity>()
+            where TEntity : class, new()
+        {
+            var entity = new TEntity();
+            AutoFill(entity);
+
+            return entity;
+        }
+
+        public void AutoFill<TEntity>(TEntity entity) 
+            where TEntity : class
+        {
+            var config = _domainGraph
+                .MapFor<TEntity>()
+                .TestConfiguration;
+
+            IDomainCommand<TEntity> command = new DefaultPersistEntityCommand<TEntity>();
+            if (config.InsertCommandType != null)
+            {
+                command = _container
+                    .GetInstance(config.InsertCommandType)
+                    .As<IDomainCommand<TEntity>>();
+            }
+
+            command.Execute(entity);
+        }
+
+        public TEntity AutoFill<TEntity, TCommand>() 
+            where TEntity : class, new()
+            where TCommand : IDomainCommand<TEntity>
+        {
+            var entity = new TEntity();
+            AutoFill<TEntity, TCommand>(entity);
+            return entity;
+        }
+
+        public void AutoFill<TEntity, TCommand>(TEntity entity) 
+            where TEntity : class where TCommand : IDomainCommand<TEntity>
+        {
+            var command = _container.GetInstance<TCommand>();
+            command.Execute(entity);
+        }
+
         public InvocationResult<TEntity> GenerateAndPersist<TEntity>() 
             where TEntity : class
         {

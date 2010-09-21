@@ -88,6 +88,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoFillTester.cs" />
     <Compile Include="Configuration\BlogPostIntegratorExtension.cs" />
     <Compile Include="Configuration\UserIntegratorExtension.cs" />
     <Compile Include="Domain\BlogPost.cs" />
