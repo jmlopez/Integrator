@@ -66,6 +66,8 @@ namespace Integrator
         public void AutoFill<TEntity>(TEntity entity) 
             where TEntity : class
         {
+            Fill(entity);
+
             var config = _domainGraph
                 .MapFor<TEntity>()
                 .TestConfiguration;
@@ -93,6 +95,7 @@ namespace Integrator
         public void AutoFill<TEntity, TCommand>(TEntity entity) 
             where TEntity : class where TCommand : IDomainCommand<TEntity>
         {
+            Fill(entity);
             var command = _container.GetInstance<TCommand>();
             command.Execute(entity);
         }
