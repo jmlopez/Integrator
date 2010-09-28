@@ -22,8 +22,18 @@ namespace Integrator.Registration
                               };
         }
 
+        public bool Has(Type type)
+        {
+            return _generators.Has(type);
+        }
+
         public void Register(Type type, IGenerator generator)
         {
+            if(_generators.Has(type))
+            {
+                _generators.Remove(type);
+            }
+
             _generators.Fill(type, generator);
         }
 

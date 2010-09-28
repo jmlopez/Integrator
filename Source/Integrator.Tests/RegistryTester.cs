@@ -27,7 +27,7 @@ namespace Integrator.Tests
         {
             _graph
                 .EntityMaps
-                .ShouldHaveCount(2);
+                .ShouldHaveCount(3);
         }
 
         [Test]

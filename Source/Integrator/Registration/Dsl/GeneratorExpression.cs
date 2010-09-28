@@ -15,7 +15,12 @@ namespace Integrator.Registration.Dsl
         public GeneratorExpression ApplyPolicy<TPolicy>()
             where TPolicy : IGeneratorPolicy, new()
         {
-            _generatorResolver.RegisterGeneratorPolicy(new TPolicy());
+            return ApplyPolicy(new TPolicy());
+        }
+
+        public GeneratorExpression ApplyPolicy(IGeneratorPolicy policy)
+        {
+            _generatorResolver.RegisterGeneratorPolicy(policy);
             return this;
         }
 

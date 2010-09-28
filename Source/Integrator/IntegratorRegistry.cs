@@ -24,6 +24,7 @@ namespace Integrator
         private readonly GeneratorResolver _generatorResolver = new GeneratorResolver();
         private readonly List<IConfigurationAction> _conventions = new List<IConfigurationAction>();
         private readonly IList<IConfigurationAction> _policies = new List<IConfigurationAction>();
+        private readonly IList<ISystemConfigurationAction> _systemPolicies = new List<ISystemConfigurationAction>();
         private readonly List<Action<DomainGraph>> _explicits = new List<Action<DomainGraph>>();
         private readonly IList<IGeneratorRegistryModification> _generatorModifications = new List<IGeneratorRegistryModification>();
         
@@ -38,6 +39,8 @@ namespace Integrator
 
             addConvention(graph => _entityMatcher.BuildMaps(graph));
             addConvention(graph => _generatorResolver.RegisterGeneratorPolicy(_defaultGeneratorRegistry));
+            addConvention(graph => _systemPolicies.Each(action => action.Configure(graph, this)));
+
             _explicits.Add(graph => _generatorTypes.ImportAssemblies(_types));
             addConvention(graph => _generatorResolver.ApplyToAll(graph));
 
@@ -83,6 +86,18 @@ namespace Integrator
             where TConvention : IConfigurationAction
         {
             _conventions.Add(convention);
+        }
+
+        public void ApplySystemPolicy<TPolicy>()
+           where TPolicy : ISystemConfigurationAction, new()
+        {
+            ApplySystemPolicy(new TPolicy());
+        }
+
+        public void ApplySystemPolicy<TPolicy>(TPolicy policy)
+            where TPolicy : ISystemConfigurationAction
+        {
+            _systemPolicies.Add(policy);
         }
 
         public DomainGraph BuildGraph()

@@ -6,8 +6,8 @@ namespace Integrator.Generators
 {
     public class DefaultEntityGenerator : IEntityGenerator
     {
-        private readonly Type _entityType;
-        private readonly DomainGraph _graph;
+        protected readonly Type _entityType;
+        protected readonly DomainGraph _graph;
 
         public DefaultEntityGenerator(Type entityType, DomainGraph graph)
         {
@@ -15,9 +15,14 @@ namespace Integrator.Generators
             _graph = graph;
         }
 
-        public object Generate()
+        public virtual object CreateEntity()
         {
-            var entity = _entityType.GetDefaultInstance();
+            return _entityType.GetDefaultInstance();
+        }
+
+        public virtual object Generate()
+        {
+            var entity = CreateEntity();
             Fill(entity, _graph);
 
             return entity;

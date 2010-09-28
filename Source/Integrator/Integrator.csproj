@@ -146,6 +146,7 @@
     <Compile Include="Registration\Dsl\TypeMatcher.cs" />
     <Compile Include="Registration\IGeneratorRegistry.cs" />
     <Compile Include="Registration\IGeneratorRegistryModification.cs" />
+    <Compile Include="Registration\ISystemConfigurationAction.cs" />
     <Compile Include="Registration\LambdaGeneratorPolicy.cs" />
     <Compile Include="Registration\Dsl\MapAlterationExpression.cs" />
     <Compile Include="Registration\Conventions\GeneratorResolver.cs" />
